@@ -9,7 +9,7 @@ Minimal target has not been tested yet, but should at least supporting Darwin 19
 
 ### TODO
 
-- [ ] tops
+- [x] tops
 - [ ] tiffutil
 - [ ] tiff2icns
 - [x] pbcopy, pbpaste
