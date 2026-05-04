@@ -14,4 +14,4 @@ Minimal target has not been tested yet, but should at least supporting Darwin 19
 - [ ] tiff2icns
 - [x] pbcopy, pbpaste
 - [ ] textutil
-- [ ] open
+- [x] open

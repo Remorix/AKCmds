@@ -1,5 +1,5 @@
-SUBDIRS=		pbcopy tops
-CHECK_SUBDIRS=	pbcopy
+SUBDIRS=		open pbcopy tops
+CHECK_SUBDIRS=	open pbcopy
 
 .PHONY: all check clean show-config
 

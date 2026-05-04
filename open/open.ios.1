@@ -1,0 +1,279 @@
+.Dd May 4, 2026
+.Dt OPEN 1
+.Os "iOS"
+.Sh NAME
+.Nm open
+.Nd open files, URLs, applications, and user activities on iOS
+.Sh SYNOPSIS
+.Nm
+.Op Fl e
+.Op Fl t
+.Op Fl f
+.Op Fl F
+.Op Fl W
+.Op Fl R
+.Op Fl n
+.Op Fl g
+.Op Fl h
+.Op Fl s Ar partial_SDK_name
+.Op Fl u Ar URL
+.Op Fl b Ar bundle_identifier
+.Op Fl a Ar application
+.Op Fl Fl header
+.Op Fl Fl help
+.Op Fl Fl unlock
+.Op Fl Fl intent
+.Op Fl Fl userActivity Ar type
+.Op Fl Fl userActivityTitle Ar title
+.Op Fl Fl userActivityWebpageURL Ar URL
+.Op Fl Fl userActivityInfo Ar KEY=VALUE
+.Op Fl Fl annotation Ar JSON
+.Op Fl Fl env Ar VAR
+.Op Fl Fl stderr Ar PATH
+.Op Fl Fl stdout Ar PATH
+.Ar
+.Op Fl Fl args Ar arg1 ...
+.Sh DESCRIPTION
+The
+.Nm
+command opens files, directories, URLs, or applications on iOS using the
+platform backends that actually exist on the device. When no application is
+specified, LaunchServices is used to resolve the default handler.
+.Pp
+Compared with macOS, some options are redefined to match iOS semantics and
+some unsupported AppKit or Finder behaviors are rejected explicitly.
+.Pp
+You can specify one or more file names or pathnames, interpreted relative to
+the shell's current working directory, or one or more URLs.
+.Pp
+The options are as follows:
+.Bl -tag -width "--userActivityWebpageURL"
+.It Fl a\ \&application
+Specifies the application to use for opening the file, URL, or user activity.
+Application names are matched against the installed app's localized and item
+names.
+.It Fl b\ \&bundle_identifier
+Specifies the bundle identifier for the application to use when opening the
+file, URL, or user activity.
+.It Fl e
+Causes the file to be opened with TextEdit if
+.Li com.apple.TextEdit
+is available.
+.Pp
+On iOS this is copy-to-app editing:
+.Bl -bullet -compact
+.It
+LaunchServices imports a copy into TextEdit
+.It
+edits do not write back to the original file
+.It
+successful opens print the imported destination path when LaunchServices
+reports it
+.El
+.It Fl t
+Causes the file to be opened with the default plain-text editor, as determined
+via LaunchServices document binding resolution.
+.Pp
+On iOS this has the same copy-to-app editing semantics as
+.Fl e .
+.It Fl f
+Reads input from standard input, writes it to a temporary plain-text file, and
+opens the result in TextEdit. This still uses the iOS copy-to-app editing
+model.
+.It Fl F
+Opens the application fresh by terminating the target app, clearing its Saved
+Application State, and relaunching it.
+.Pp
+On iOS,
+.Fl F
+requires an explicit application target, such as
+.Fl a ,
+.Fl b ,
+.Fl e ,
+.Fl t ,
+or
+.Fl f .
+.It Fl W
+Causes
+.Nm
+to wait until explicitly launched applications exit.
+.Pp
+On iOS,
+.Fl W
+does not apply to implicit bare file or URL opens.
+.It Fl R
+Reveals the specified path in Filza.
+.Pp
+This option requires a usable
+.Li com.tigisoftware.Filza
+installation. The current iOS implementation is reveal/highlight only; it does
+not provide a separate file-open viewer path through Filza.
+.It Fl n
+Requests a new scene for the target application.
+.Pp
+On iOS this means new-scene behavior, not a second process instance.
+.It Fl g
+Launches the target application suspended when the launch path goes through
+FrontBoard.
+.Pp
+This option requires an explicit application target and is not supported with
+.Fl Fl userActivity
+on the current implementation.
+.It Fl h
+Searches header include and framework roots for matching header names, then
+opens the resolved path or paths.
+.It Fl s Ar partial_SDK_name
+Limits
+.Fl h
+header search to SDK directories whose names contain the supplied substring.
+.Pp
+This filters the SDK-root portion of the search. Live non-SDK system roots are
+still searched.
+.It Fl Fl header
+Long form of
+.Fl h .
+.It Fl Fl help
+Prints usage help.
+.It Fl u Ar URL
+Opens the specified URL even if the string could also be interpreted as a file
+path.
+.It Fl Fl args
+All remaining arguments are passed to the opened application as argv.
+.Pp
+These arguments are not opened or interpreted by
+.Nm
+itself.
+.It Fl Fl env Ar VAR
+Adds
+.Ar VAR
+to the environment of the launched application.
+.Ar VAR
+should be formatted NAME=VALUE or NAME.
+.Pp
+This option requires an explicit application or explicit user-activity target.
+.It Fl Fl stdout Ar PATH
+Launches the application with stdout connected to
+.Ar PATH .
+.Pp
+This option requires an explicit application or explicit user-activity target.
+.It Fl Fl stderr Ar PATH
+Launches the application with stderr connected to
+.Ar PATH .
+.Pp
+This option requires an explicit application or explicit user-activity target.
+.It Fl Fl unlock
+Requests device unlock for explicit FrontBoard launches.
+.Pp
+This option is only supported when the launch path goes through an explicit app
+target.
+.It Fl Fl intent
+Requests the iOS LaunchIntent flag.
+.Pp
+This is a narrow launch flag for explicit app and user-activity launches. It is
+not a generic Siri or App Intent runner.
+.It Fl Fl userActivity Ar type
+Opens the application for the specified
+.Li NSUserActivity
+type.
+.Pp
+When
+.Fl a
+or
+.Fl b
+is not supplied, the implementation resolves the target by LaunchServices and a
+fallback scan of installed
+.Pa Info.plist
+declarations.
+.Pp
+This option does not accept file or URL operands on iOS.
+.It Fl Fl userActivityTitle Ar title
+Sets
+.Li NSUserActivity.title
+for the user-activity launch.
+.Pp
+Requires
+.Fl Fl userActivity .
+.It Fl Fl userActivityWebpageURL Ar URL
+Sets
+.Li NSUserActivity.webpageURL
+for the user-activity launch.
+.Pp
+Requires
+.Fl Fl userActivity .
+.It Fl Fl userActivityInfo Ar KEY=VALUE
+Adds a string entry to
+.Li NSUserActivity.userInfo .
+This option may be repeated.
+.Pp
+Requires
+.Fl Fl userActivity .
+.It Fl Fl annotation Ar JSON
+Adds a property-list annotation payload for explicit-app URL and document opens.
+JSON may be an object, array, string, number, true, false, or null.
+.Pp
+On iOS this is only supported for a single explicit-app file or URL operand.
+.El
+.Sh UNSUPPORTED OPTIONS
+The following macOS options are currently unsupported on iOS and are rejected
+with explicit diagnostics:
+.Pp
+.Bl -tag -width "-x"
+.It Fl j
+There is no meaningful app-hide equivalent in the current scope.
+.It Fl x
+There is no proven iOS equivalent for "do not add to recents".
+.It Fl i
+The
+.Fl Fl stdin
+path-launch option is not supported on iOS.
+.El
+.Sh EXAMPLES
+"open -b com.apple.Preferences" launches Settings by bundle identifier.
+.Pp
+"open -a TextEdit '/var/mobile/Documents/foo.txt'" imports the file into
+TextEdit for editing.
+.Pp
+"printf 'hello\\n' | open -f" writes stdin to a temporary text file and opens it
+in TextEdit using the iOS copy-to-app editing path.
+.Pp
+"open -R '/var/mobile/Documents/foo.txt'" launches Filza and highlights the
+requested path.
+.Pp
+"open -h UIApplication.h" searches known iOS framework and SDK roots for the
+header, then opens the resolved path in the current plain-text editor flow.
+.Pp
+"open -h -s iPhoneOS UIApplication.h" limits the SDK portion of header search
+to SDK directories whose names contain
+.Li iPhoneOS .
+.Pp
+"open --unlock -b com.apple.Preferences" requests an unlock-capable explicit
+launch of Settings.
+.Pp
+"open --userActivity com.apple.TextEdit.editing -b com.apple.TextEdit" opens
+TextEdit for the specified activity type.
+.Pp
+"open --annotation true -b com.example.MyApp '/var/mobile/Documents/foo.txt'"
+opens the document explicitly in the named app with an annotation payload.
+.Sh CAVEATS
+The most important semantic differences from macOS are:
+.Bl -bullet -compact
+.It
+.Fl e
+and
+.Fl t
+are copy-to-app editing, not in-place editing
+.It
+.Fl n
+means new scene, not new process
+.It
+.Fl W
+only applies to explicitly launched applications
+.It
+.Fl R
+uses Filza reveal on jailbroken iOS instead of Finder reveal
+.El
+.Sh HISTORY
+The iOS implementation is a private-framework rewrite for AKCmds and preserves
+the shell-facing behavior of macOS
+.Nm
+where iOS has a real equivalent.
