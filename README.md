@@ -1,6 +1,6 @@
 # BomCmds
 
-Missing AppKit commands for iOS: tops, tiffutil, tiff2icns, pbcopy, pbpaste, textutil, open
+Remaining AppKit commands without iOS support: tiffutil, textutil
 
 ### Current Status
 
@@ -11,7 +11,7 @@ Minimal target has not been tested yet, but should at least supporting Darwin 19
 
 - [x] tops
 - [ ] tiffutil
-- [ ] tiff2icns
+- [x] tiff2icns
 - [x] pbcopy, pbpaste
 - [ ] textutil
 - [x] open
