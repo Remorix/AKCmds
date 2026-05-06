@@ -1,0 +1,27 @@
+diff --git a/libtiff/tif_print.c b/libtiff/tif_print.c
+index 80a9d90f..ab1f2a54 100644
+--- a/libtiff/tif_print.c
++++ b/libtiff/tif_print.c
+@@ -233,6 +233,10 @@ _TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32_t tag,
+ 	return 0;
+ }
+ 
++#ifdef __APPLE__
++#include "tif_print_apple.inc"
++#endif
++
+ /*
+  * Print the contents of the current directory
+  * to the specified stdio file stream.
+@@ -243,6 +247,11 @@ _TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32_t tag,
+ void
+ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
+ {
++#ifdef __APPLE__
++	tiffutil_TIFFPrintDirectory(tif, fd, flags);
++	return;
++#endif
++
+ 	TIFFDirectory *td = &tif->tif_dir;
+ 	char *sep;
+ 	long l, n;

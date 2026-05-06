@@ -1,0 +1,16 @@
+diff --git a/libtiff/tif_open.c b/libtiff/tif_open.c
+index 549f56ce..8d87c4af 100644
+--- a/libtiff/tif_open.c
++++ b/libtiff/tif_open.c
+@@ -158,9 +158,11 @@ TIFFClientOpen(
+ 		tif->tif_flags |= TIFF_MAPPED;
+ 
+ 	#ifdef STRIPCHOP_DEFAULT
++	#ifndef __APPLE__
+ 	if (m == O_RDONLY || m == O_RDWR)
+ 		tif->tif_flags |= STRIPCHOP_DEFAULT;
+ 	#endif
++	#endif
+ 
+ 	/*
+ 	 * Process library-specific flags in the open mode string.

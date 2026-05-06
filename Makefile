@@ -1,4 +1,4 @@
-SUBDIRS=		open pbcopy tiff2icns tops
+SUBDIRS=		open pbcopy tiff2icns tiffutil tops
 CHECK_SUBDIRS=	open pbcopy
 
 .PHONY: all check clean show-config
