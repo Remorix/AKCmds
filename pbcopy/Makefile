@@ -52,11 +52,9 @@ CODESIGN_FLAGS?=	--force --sign - --entitlements ${ENTITLEMENTS} --timestamp=non
 LDID?=			ldid
 LDID_FLAGS?=		-S${ENTITLEMENTS}
 
-.PHONY: all check clean show-config
+.PHONY: all clean show-config
 
 all: ${TARGET} ${LINKS}
-
-check: ${TARGET} ${LINKS}
 
 show-config:
 	@printf 'PROG=%s\n' '${PROG}'

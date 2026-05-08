@@ -1,14 +1,8 @@
-SUBDIRS=		open pbcopy tiff2icns tiffutil tops
-CHECK_SUBDIRS=	open pbcopy
+SUBDIRS=		open pbcopy textutil tiff2icns tiffutil tops
 
-.PHONY: all check clean show-config
+.PHONY: all clean show-config
 
 all clean show-config:
 	@for subdir in ${SUBDIRS}; do \
-		${MAKE} -C "$$subdir" $@ || exit $$?; \
-	done
-
-check:
-	@for subdir in ${CHECK_SUBDIRS}; do \
 		${MAKE} -C "$$subdir" $@ || exit $$?; \
 	done
