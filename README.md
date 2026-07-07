@@ -1,4 +1,4 @@
-# BomCmds
+# AKCmds
 
 Missing AppKit commands for iOS: tops, tiffutil, tiff2icns, pbcopy, pbpaste, textutil, open
 
